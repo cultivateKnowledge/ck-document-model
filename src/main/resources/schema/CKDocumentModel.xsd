@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://www.cultivateknowledge.com/schema/CKDocumentModel"
+           elementFormDefault="qualified" attributeFormDefault="qualified"
+           xmlns:tns="http://www.cultivateknowledge.com/schema/CKDocumentModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="./xml.xsd" />
+
+    <!-- Core Model Element Definitions -->
+    <xs:element name="Record" type="tns:RecordType" />
+    <xs:element name="Entity" type="tns:EntityType" />
+    <xs:element name="FieldGroup" type="tns:FieldGroupType" />
+    <xs:element name="Field" type="tns:FieldType" />
+    <xs:element name="Relation" type="tns:RelationType" />
+    <xs:element name="Context" type="tns:ContextType" />
+    <xs:element name="Media" type="tns:MediaType" />
+
+    <!-- Data Type Definitions -->
+    <xs:complexType name="RecordType">
+        <xs:sequence>
+            <xs:element ref="tns:Entity" />
+        </xs:sequence>
+        <xs:attribute name="recordId" type="xs:anyURI" use="required" />
+        <xs:attribute name="recordCreated" type="xs:dateTime"
+                      use="required" />
+        <xs:attribute name="recordModified" type="xs:dateTime" />
+    </xs:complexType>
+    <xs:complexType name="EntityType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:Field" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:FieldGroup" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:Relation" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:Context" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="tns:Media" />
+        </xs:sequence>
+        <xs:attribute ref="tns:entityId" use="required" />
+        <xs:attribute ref="tns:entityType" use="required" />
+        <xs:attribute ref="tns:entityTypeURI" />
+        <xs:attribute ref="tns:earlyDateQualifier" />
+        <xs:attribute ref="tns:lateDateQualifier" />
+    </xs:complexType>
+    <xs:complexType name="FieldGroupType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="tns:Field" />
+        </xs:sequence>
+        <xs:attribute ref="tns:fieldGroupName" use="required" />
+        <xs:attribute ref="tns:pref" />
+        <xs:attribute ref="tns:order" />
+        <xs:attribute ref="tns:elementId" />
+    </xs:complexType>
+    <xs:complexType name="RelationType">
+        <xs:complexContent>
+            <xs:extension base="tns:AbstractContextType">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element maxOccurs="unbounded" ref="tns:Field" />
+                    <xs:element maxOccurs="unbounded" ref="tns:FieldGroup" />
+                    <xs:element maxOccurs="unbounded" ref="tns:Relation" />
+                </xs:choice>
+                <xs:attribute ref="tns:relationType" use="required" />
+                <xs:attribute ref="tns:sourceURI" />
+                <xs:attribute ref="tns:relationURI" />
+                <xs:attribute ref="tns:targetURI" />
+                <xs:attribute ref="tns:authorityURI" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ContextType">
+        <xs:complexContent>
+            <xs:extension base="tns:AbstractContextType">
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:sequence>
+                        <xs:choice maxOccurs="unbounded" minOccurs="0">
+                            <xs:element maxOccurs="unbounded" ref="tns:Field" />
+                            <xs:element maxOccurs="unbounded" ref="tns:FieldGroup" />
+                        </xs:choice>
+                        <xs:element maxOccurs="unbounded" minOccurs="1"
+                                    ref="tns:Relation" />
+                    </xs:sequence>
+                    <xs:element maxOccurs="unbounded" ref="tns:Entity" />
+                </xs:choice>
+                <xs:attribute ref="tns:contextType" use="required" />
+                <xs:attribute ref="tns:relationURI" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="MediaType">
+        <xs:complexContent>
+            <xs:extension base="tns:AbstractContextType">
+                <xs:sequence>
+                    <xs:choice maxOccurs="unbounded" minOccurs="0">
+                        <xs:element maxOccurs="unbounded" ref="tns:Field" />
+                        <xs:element maxOccurs="unbounded" ref="tns:FieldGroup" />
+                    </xs:choice>
+                    <xs:element maxOccurs="unbounded" minOccurs="0"
+                                ref="tns:Relation" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0"
+                                ref="tns:Context" />
+                    <xs:element maxOccurs="unbounded" ref="tns:Resource" />
+                </xs:sequence>
+                <xs:attribute ref="tns:mediaId" use="required" />
+                <xs:attribute ref="tns:mediaProfile" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Resource">
+        <xs:complexType>
+            <xs:attribute ref="tns:mimeType" use="required" />
+            <xs:attribute ref="tns:ref" use="required" />
+            <xs:attribute ref="tns:resourceProfile" />
+        </xs:complexType>
+    </xs:element>
+
+    <!--  Field Type Extensions -->
+    <xs:complexType name="DateType">
+        <xs:complexContent>
+            <xs:extension base="tns:FieldType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="EarlyDate" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="LateDate" type="xs:dateTime" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NumberType">
+        <xs:complexContent>
+            <xs:extension base="tns:FieldType">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="Number">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:decimal">
+                                    <xs:attribute ref="tns:unit" />
+                                    <xs:attribute ref="tns:type" />
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="AuditStringType">
+        <xs:complexContent>
+            <xs:extension base="tns:InternalStringType">
+                <xs:attribute ref="tns:semanticType" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="InternalStringType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="tns:modified" />
+                <xs:attribute ref="tns:creator" />
+                <xs:attribute ref="xml:lang" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="PublicEntityTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OBJECT" />
+            <xs:enumeration value="LOCATION" />
+            <xs:enumeration value="PERSON" />
+            <xs:enumeration value="GROUP" />
+            <xs:enumeration value="AGENT" />
+            <xs:enumeration value="REPORT" />
+            <xs:enumeration value="EXHIBITION" />
+            <xs:enumeration value="REFERENCE" />
+            <xs:enumeration value="MEDIA" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Global Attribute Definitions -->
+    <xs:attribute name="elementId" type="xs:anyURI" />
+    <xs:attribute name="authorityURI" type="xs:anyURI" />
+    <xs:attribute name="contentRule" type="xs:string" />
+    <xs:attribute name="contextType" type="xs:string" />
+    <xs:attribute name="creator" type="xs:string" />
+    <xs:attribute name="earlyDateQualifier" type="xs:dateTime" />
+    <xs:attribute name="entityId" type="xs:anyURI" />
+    <xs:attribute name="entityType" type="tns:PublicEntityTypeEnum" />
+    <xs:attribute name="entityTypeURI" type="xs:anyURI" />
+    <xs:attribute name="scope" type="xs:string" />
+    <xs:attribute name="fieldGroupName" type="xs:string" />
+    <xs:attribute name="fieldId" type="xs:string" />
+    <xs:attribute name="fieldName" type="xs:string" />
+    <xs:attribute name="lateDateQualifier" type="xs:dateTime" />
+    <xs:attribute name="mediaId" type="xs:anyURI" />
+    <xs:attribute name="mediaProfile" type="xs:anyURI" />
+    <xs:attribute name="mimeType" type="xs:string" />
+    <xs:attribute name="modified" type="xs:dateTime" />
+    <xs:attribute name="order" type="xs:int" />
+    <xs:attribute name="pref" type="xs:boolean" />
+    <xs:attribute name="ref" type="xs:anyURI" />
+    <xs:attribute name="relationType" type="xs:string" />
+    <xs:attribute name="relationURI" type="xs:anyURI" />
+    <xs:attribute name="resourceProfile" type="xs:anyURI" />
+    <xs:attribute name="semanticType" type="xs:string" />
+    <xs:attribute name="sourceURI" type="xs:anyURI" />
+    <xs:attribute name="targetEntityType" type="tns:PublicEntityTypeEnum" />
+    <xs:attribute name="targetURI" type="xs:anyURI" />
+    <xs:attribute name="type" type="xs:string" />
+    <xs:attribute name="unit" type="xs:string" />
+    <xs:attribute name="useFlag" type="xs:int" />
+
+    <!-- Abstract Element Definitions -->
+    <xs:complexType name="FieldType">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Name"
+                        type="tns:InternalStringType" />
+            <xs:element maxOccurs="unbounded" name="Text"
+                        type="tns:InternalStringType" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Note"
+                        type="tns:AuditStringType" />
+        </xs:sequence>
+        <xs:attribute ref="tns:fieldName" use="required" />
+        <xs:attribute ref="tns:pref" />
+        <xs:attribute ref="tns:order" />
+        <xs:attribute ref="tns:contentRule" />
+        <xs:attribute ref="tns:scope" />
+        <xs:attribute ref="tns:useFlag" />
+        <xs:attribute ref="tns:authorityURI" />
+        <xs:attribute ref="tns:relationURI" />
+        <xs:attribute ref="tns:elementId" />
+    </xs:complexType>
+
+    <xs:complexType abstract="true" name="AbstractContextType">
+        <xs:attribute ref="tns:targetEntityType" use="required" />
+        <xs:attribute ref="tns:pref" />
+        <xs:attribute ref="tns:order" />
+        <xs:attribute ref="tns:earlyDateQualifier" />
+        <xs:attribute ref="tns:lateDateQualifier" />
+        <xs:attribute ref="tns:elementId" />
+    </xs:complexType>
+</xs:schema>
