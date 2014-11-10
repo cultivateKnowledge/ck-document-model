@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema version="1.0" targetNamespace="http://www.cultivateknowledge.com/schema/CKDocumentModel"
-           elementFormDefault="qualified" attributeFormDefault="qualified"
-           xmlns:tns="http://www.cultivateknowledge.com/schema/CKDocumentModel" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="1.0"
+           targetNamespace="http://www.cultivateknowledge.com/schema/CKDocumentModel"
+           elementFormDefault="qualified"
+           attributeFormDefault="qualified"
+           xmlns:tns="http://www.cultivateknowledge.com/schema/CKDocumentModel"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="./xml.xsd" />
 
@@ -19,10 +22,12 @@
         <xs:sequence>
             <xs:element ref="tns:Entity" />
         </xs:sequence>
+        <xs:attribute name="institutionId" type="xs:string" />
+        <xs:attribute name="collectionId" type="xs:string" use="required" />
         <xs:attribute name="recordId" type="xs:anyURI" use="required" />
-        <xs:attribute name="recordCreated" type="xs:dateTime"
-                      use="required" />
-        <xs:attribute name="recordModified" type="xs:dateTime" />
+        <xs:attribute name="recordCreated" type="xs:string" />
+        <xs:attribute name="recordModified" type="xs:string" />
+        <xs:attribute name="recordStatus" type="tns:RecordStatusTypeEnum" default="ACTIVE" />
     </xs:complexType>
     <xs:complexType name="EntityType">
         <xs:sequence>
@@ -114,8 +119,8 @@
         <xs:complexContent>
             <xs:extension base="tns:FieldType">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="EarlyDate" type="xs:dateTime" />
-                    <xs:element minOccurs="0" name="LateDate" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="EarlyDate" type="xs:string" />
+                    <xs:element minOccurs="0" name="LateDate" type="xs:string" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -167,6 +172,12 @@
             <xs:enumeration value="MEDIA" />
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="RecordStatusTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACTIVE" />
+            <xs:enumeration value="DELETED" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <!-- Global Attribute Definitions -->
     <xs:attribute name="elementId" type="xs:anyURI" />
@@ -174,7 +185,7 @@
     <xs:attribute name="contentRule" type="xs:string" />
     <xs:attribute name="contextType" type="xs:string" />
     <xs:attribute name="creator" type="xs:string" />
-    <xs:attribute name="earlyDateQualifier" type="xs:dateTime" />
+    <xs:attribute name="earlyDateQualifier" type="xs:string" />
     <xs:attribute name="entityId" type="xs:anyURI" />
     <xs:attribute name="entityType" type="tns:PublicEntityTypeEnum" />
     <xs:attribute name="entityTypeURI" type="xs:anyURI" />
@@ -182,11 +193,11 @@
     <xs:attribute name="fieldGroupName" type="xs:string" />
     <xs:attribute name="fieldId" type="xs:string" />
     <xs:attribute name="fieldName" type="xs:string" />
-    <xs:attribute name="lateDateQualifier" type="xs:dateTime" />
+    <xs:attribute name="lateDateQualifier" type="xs:string" />
     <xs:attribute name="mediaId" type="xs:anyURI" />
     <xs:attribute name="mediaProfile" type="xs:anyURI" />
     <xs:attribute name="mimeType" type="xs:string" />
-    <xs:attribute name="modified" type="xs:dateTime" />
+    <xs:attribute name="modified" type="xs:string" />
     <xs:attribute name="order" type="xs:int" />
     <xs:attribute name="pref" type="xs:boolean" />
     <xs:attribute name="ref" type="xs:anyURI" />

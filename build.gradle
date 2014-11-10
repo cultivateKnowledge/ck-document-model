@@ -25,6 +25,9 @@ apply plugin: 'com.github.jacobono.jaxb'
 
 jaxb {
     xsdDir = "src/main/resources/schema"
+    episodesDir = "build/generated-sources/episodes"
+    bindingsDir = "src/main/resources/schema"
+    bindings = ["bindings.xjb"]
     xjc {
         generatePackage    = "com.cultivateknowledge.schema"
         destinationDir = "build/generated-sources/java"
@@ -39,6 +42,8 @@ dependencies {
     // Core
     compile 'com.google.guava:guava:17.0'
     compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'joda-time:joda-time:2.3'
+    compile 'javax.xml.bind:jaxb-api:2.2.12'
 
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.5'
